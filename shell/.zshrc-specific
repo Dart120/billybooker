@@ -1,1 +1,0 @@
-plugins=(vscode git colorize npm npx yarn docker docker-compose)
