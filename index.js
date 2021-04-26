@@ -84,7 +84,16 @@ const bookTable = async(day, month, preferences) => {
             return siblings;
 
         };
+        let currentRoom = 0;
+        for (let i = 0; i < rooms.length; i++) {
+            siblings = getSiblings(rooms[i].parentNode)
+            if (getSiblings(rooms[i].parentNode)[0].innerText.includes('13:00')) {
 
+                currentRoom = rooms[i]
+                break
+            }
+        }
+        currentRoom.click()
     })
 
 
