@@ -1,23 +1,25 @@
 {
-  "name": "billybooker",
-  "version": "1.0.0",
-  "description": "**Ultimate React development container for Visual Studio Code**",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Dart120/billybooker.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Dart120/billybooker/issues"
-  },
-  "homepage": "https://github.com/Dart120/billybooker#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "puppeteer": "^9.0.0"
-  }
+    "name": "billybooker",
+    "version": "1.0.0",
+    "description": "**Ultimate React development container for Visual Studio Code**",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Dart120/billybooker.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Dart120/billybooker/issues"
+    },
+    "homepage": "https://github.com/Dart120/billybooker#readme",
+    "dependencies": {
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "puppeteer": "^9.0.0"
+    }
 }
