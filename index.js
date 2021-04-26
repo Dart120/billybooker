@@ -1,11 +1,14 @@
 const express = require('express')
+const schedule = require('node-schedule');
+const date = require('date-and-time');
+
 
 const puppeteer = require('puppeteer');
 require('dotenv').config()
 
 
 
-const bookTable = async(day, month, preferences) => {
+const bookTable = async(day, month, preferences, time) => {
 
     const browser = await puppeteer.launch({
         headless: false,
@@ -62,7 +65,7 @@ const bookTable = async(day, month, preferences) => {
     console.log('here')
     await page.click('button[type="submit"]')
     await page.waitForSelector('.card-body');
-    await page.evaluate(() => {
+    await page.evaluate((time) => {
         let rooms = document.querySelectorAll('[name="room"]');
         let getSiblings = function(e) {
             // for collecting siblings
@@ -76,7 +79,7 @@ const bookTable = async(day, month, preferences) => {
 
             // collecting siblings
             while (sibling) {
-                if (sibling !== e) {
+                if (sibling.nodeType == 1 && sibling !== e) {
                     siblings.push(sibling);
                 }
                 sibling = sibling.nextSibling;
@@ -86,57 +89,42 @@ const bookTable = async(day, month, preferences) => {
         };
         let currentRoom = 0;
         for (let i = 0; i < rooms.length; i++) {
-            siblings = getSiblings(rooms[i].parentNode)
-            if (getSiblings(rooms[i].parentNode)[0].innerText.includes('13:00')) {
+
+            if (getSiblings(rooms[i].parentNode).reverse()[0].innerText.includes(time)) {
 
                 currentRoom = rooms[i]
                 break
             }
         }
         currentRoom.click()
-    })
+    }, time)
+    await page.click('button[type="submit"]')
+    await page.waitForSelector('.card-body');
+    await page.evaluate((time) => {
+        document.querySelector(`#start${time.slice(0,2)}_0`).click()
+    }, time)
+    await page.click('button[type="submit"]')
+    await page.waitForSelector('.card-body');
+    await page.$eval('input[name="terms"]', check => check.checked = true);
+    await page.click('button[type="submit"]')
 
-
-
-    //     thing = await page.evaluate(() => {
-    //         links = Array.from(document.querySelectorAll('._50f7'))
-    //         here = links.map((elem) => 'https://www.facebook.com' + elem.parentNode.getAttribute('href'))
-    //         return here
-    //     })
-    //     console.log('Returning', [thing, page])
-    //     return [thing, page]
-
-
-    // }
-
-
-
-    // for (let i = 0; i < t.length; i++) {
-    //     urll = t[i];
-    //     console.log(urll)
-    //     await page.goto(urll, {
-    //         waitUntil: 'networkidle2'
-    //     })
-    //     cover = await page.evaluate(() => document.querySelector('._3ojl').children[0].getAttribute('src'))
-    //     console.log(1)
-    //     date = await page.evaluate(() => document.querySelector('._5xhk').innerHTML)
-    //     console.log(2)
-    //     place = await page.evaluate(() => document.querySelectorAll('._xkh')[1].children[0].innerHTML)
-    //     console.log(3)
-    //     title = await page.evaluate(() => document.querySelector('._5gmx').innerHTML)
-    //     console.log(4)
-    //     events.push({
-    //         cover,
-    //         date,
-    //         place,
-    //         title: entities.decode(title)
-    //     })
 }
-bookTable('29', '04', [
-    'Bill Bryson Library: Stay and Study',
-    'Mathematical Sciences & Computer Science Building: Individual Study',
-    'Teaching and Learning Centre: Individual Study - long stay'
-])
+const now = new Date();
+const target = date.addDays(now, 5);
+pattern = date.compile('DD');
+day = date.format(target, pattern);
+pattern = date.compile('MM');
+month = date.format(target, pattern);
+const job = schedule.scheduleJob('5 30 18 * * *', function() {
+
+    bookTable(day, month, [
+        'Bill Bryson Library: Stay and Study',
+        'Mathematical Sciences & Computer Science Building: Individual Study',
+        'Teaching and Learning Centre: Individual Study - long stay'
+    ], '13:00')
+});
+
+
 
 // [
 //     'Bill Bryson Library: Overnight Stay and Study',
