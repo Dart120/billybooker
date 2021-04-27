@@ -4,7 +4,7 @@ WIP
 1. run npm install
 2. make a .env file with containing the text below
 
-USERNAME=***YOUR USERNAME HERE***
+USERNAME=***YOUR USERNAME HERE***\
 PASSWORD=***YOUR PASSWORD HERE***
 
 3. run node index.js and leave it running
