@@ -121,7 +121,7 @@ const bookTable = async(day, month, preferences, time) => {
 
 }
 const now = new Date();
-const target = date.addDays(now, 4);
+const target = date.addDays(now, 5);
 pattern = date.compile('DD');
 day = date.format(target, pattern);
 pattern = date.compile('MM');
