@@ -29,14 +29,19 @@ const bookTable = async(day, month, preferences, time) => {
     await page.waitForSelector('#username');
     console.log('Page Object is set up')
     console.log(process.env.USERNAME)
+        //Logs in
     await page.type('input[name=username]', process.env.USERNAME, { delay: 20 })
     await page.type('input[name=password]', process.env.PASSWORD, { delay: 20 })
     await page.click('button[type="submit"]')
     await page.waitForSelector('#category_6');
+    await page.screenshot({ path: 's1.png' });
+    //selects type of booking
     await page.$eval('input[name="category[6]"]', check => check.checked = true);
     await page.click('button[type="submit"]')
     await page.waitForSelector('#date');
+    await page.screenshot({ path: 's2.png' });
     await page.type('#date', day + month);
+
     let {
         options,
         values
@@ -65,6 +70,8 @@ const bookTable = async(day, month, preferences, time) => {
     console.log('here')
     await page.click('button[type="submit"]')
     await page.waitForSelector('.card-body');
+    await page.screenshot({ path: 's3.png' });
+    //selects room
     await page.evaluate((time) => {
         let rooms = document.querySelectorAll('[name="room"]');
         let getSiblings = function(e) {
@@ -100,17 +107,21 @@ const bookTable = async(day, month, preferences, time) => {
     }, time)
     await page.click('button[type="submit"]')
     await page.waitForSelector('.card-body');
+    await page.screenshot({ path: 's4.png' });
+    //selects time
     await page.evaluate((time) => {
         document.querySelector(`#start${time.slice(0,2)}_0`).click()
     }, time)
     await page.click('button[type="submit"]')
     await page.waitForSelector('.card-body');
+    //done
+    await page.screenshot({ path: 's5.png' });
     await page.$eval('input[name="terms"]', check => check.checked = true);
     await page.click('button[type="submit"]')
 
 }
 const now = new Date();
-const target = date.addDays(now, 5);
+const target = date.addDays(now, 4);
 pattern = date.compile('DD');
 day = date.format(target, pattern);
 pattern = date.compile('MM');
