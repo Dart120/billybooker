@@ -11,7 +11,7 @@ require('dotenv').config()
 const bookTable = async(day, month, preferences, time) => {
 
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         devtools: true,
         'args': [
             '--no-sandbox',
