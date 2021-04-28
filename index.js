@@ -1,4 +1,10 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+
+const app = express()
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 const schedule = require('node-schedule');
 const date = require('date-and-time');
 
@@ -11,7 +17,7 @@ require('dotenv').config()
 const bookTable = async(day, month, preferences, time) => {
 
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         devtools: true,
         'args': [
             '--no-sandbox',
@@ -120,23 +126,38 @@ const bookTable = async(day, month, preferences, time) => {
     await page.click('button[type="submit"]')
 
 }
-const now = new Date();
-const target = date.addDays(now, 5);
-pattern = date.compile('DD');
-day = date.format(target, pattern);
-pattern = date.compile('MM');
-month = date.format(target, pattern);
-const job = schedule.scheduleJob('5 30 18 * * *', function() {
 
-    bookTable(day, month, [
-        'Bill Bryson Library: Stay and Study',
-        'Mathematical Sciences & Computer Science Building: Individual Study',
-        'Teaching and Learning Centre: Individual Study - long stay'
-    ], '13:00')
-});
+running = false;
+let job = null;
+app.post('/run',(req, res)=>{
+    let {pref1, pref2, pref3, time} = req.body
+    const now = new Date();
+    const target = date.addDays(now, 5);
+    pattern = date.compile('DD');
+    day = date.format(target, pattern);
+    pattern = date.compile('MM');
+    month = date.format(target, pattern);
+    res.send({running:true})
+
+    job = schedule.scheduleJob('1 * * * * *', function() {
+    
+        bookTable(day, month, [
+            'Bill Bryson Library: Stay and Study',
+            'Mathematical Sciences & Computer Science Building: Individual Study',
+            'Teaching and Learning Centre: Individual Study - long stay'
+        ], '13:00')
+    });
 
 
-
+})
+app.get('/stoprun',(req, res)=>{
+    if (job){
+        job.cancel()
+    
+    }
+    res.send({running:false})
+    
+})
 // [
 //     'Bill Bryson Library: Overnight Stay and Study',
 //     'Bill Bryson Library: Stay and Study',
@@ -152,3 +173,4 @@ const job = schedule.scheduleJob('5 30 18 * * *', function() {
 //     'Teaching and Learning Centre: Media Table',
 //     'Teaching and Learning Centre: Study Table'
 // ]
+app.listen(8080)
