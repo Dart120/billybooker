@@ -7,7 +7,7 @@ function PrefDD(props) {
     return (
         <FormControl>
         <InputLabel id={props.prefn}>Preference {props.prefn}</InputLabel>
-                <Select id = {props.prefn} labelId={props.prefn} onChange={(e) => props.handleChoice(e,props.prefn)}>
+                <Select value = {props.prefVal} id = {props.prefn} labelId={props.prefn} onChange={(e) => props.handleChoice(e,props.prefn)}>
                     {props.rooms.map(room => <MenuItem value={room}>{room}</MenuItem>)}
                 </Select>
                 </FormControl>

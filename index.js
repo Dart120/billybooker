@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const app = express()
-
+app.use(bodyParser.json())
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 const schedule = require('node-schedule');
@@ -131,21 +131,22 @@ running = false;
 let job = null;
 app.post('/run',(req, res)=>{
     let {pref1, pref2, pref3, time} = req.body
+    console.log(req.body)
     const now = new Date();
     const target = date.addDays(now, 5);
     pattern = date.compile('DD');
     day = date.format(target, pattern);
     pattern = date.compile('MM');
     month = date.format(target, pattern);
-    res.send({running:true})
+    res.send(JSON.stringify({running:true}))
 
-    job = schedule.scheduleJob('1 * * * * *', function() {
-    
+    job = schedule.scheduleJob('5 30 18 * * *', function() {
+        console.log('starting')
         bookTable(day, month, [
-            'Bill Bryson Library: Stay and Study',
-            'Mathematical Sciences & Computer Science Building: Individual Study',
-            'Teaching and Learning Centre: Individual Study - long stay'
-        ], '13:00')
+            pref1,
+            pref2,
+            pref3
+        ], time)
     });
 
 

@@ -8,3 +8,6 @@ USERNAME=***YOUR USERNAME HERE***\
 PASSWORD=***YOUR PASSWORD HERE***
 
 3. run node index.js and leave it running
+4. run cd billybooker
+5. run npm run dev
+6. wait till 6:30pm and profit

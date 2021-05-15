@@ -26,22 +26,25 @@ function DisplayBox() {
         'Teaching and Learning Centre: Media Table',
         'Teaching and Learning Centre: Study Table'
     ]
+    let prefs = [pref1,pref2,pref3]
     function handleTime(e){
         setTime(e.target.value)
     }
     function handleChoice(e,prefn){
-        if (prefn === 'pref1'){
+        if (prefn === 1){
             setPref1(e.target.value)
+            
         }
-        else if (prefn === 'pref2'){
+        else if (prefn === 2){
             setPref2(e.target.value)
         }
-        else if (prefn === 'pref3'){
+        else if (prefn === 3){
             setPref3(e.target.value)
         }
         else{
             console.log('yikes')
         }
+        console.log(prefn)
     }
     function startServer(){
         fetch('/run', {
@@ -55,6 +58,7 @@ function DisplayBox() {
         }),
 }).then((res) => res.json())
 .then((data) => {
+    console.log(data)
     setRunning(data.running)
 })
     }
@@ -75,17 +79,17 @@ function DisplayBox() {
              <div class="timecontainer">
              <InputLabel id="time">Time</InputLabel>
              <FormControl>
-                <Select id='time' onChange={(e) => handleTime(e)}>
+                <Select value={time} id='time' onChange={(e) => handleTime(e)}>
                 <MenuItem value="13:00">1pm</MenuItem>
                 <MenuItem value="18:00">6pm</MenuItem>
                 </Select>
                 </FormControl>
              </div>
              <div class="prefcontainer">
-                 {[1,2,3].map(n => <PrefDD prefn = {n} handleChoice = {handleChoice} rooms = {rooms}></PrefDD>)}
+                 {prefs.map((pref,index) => <PrefDD prefVal = {pref} prefn = {index + 1} handleChoice = {handleChoice} rooms = {rooms}></PrefDD>)}
              </div>
              <div class="btncontainer">
-             {running ? <Button onClick={() => stopServer()} color="primary"> Stop Running</Button> : <Button onClick={() => startServer()} color="primary"> Run</Button>}
+             {running ? <Button onClick={() => stopServer()} color="secondary"> Stop Running</Button> : <Button onClick={() => startServer()} color="primary"> Run</Button>}
 
              </div>
          </div>
